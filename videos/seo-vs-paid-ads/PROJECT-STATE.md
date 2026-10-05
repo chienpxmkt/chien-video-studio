@@ -2,37 +2,64 @@
 
 ## Status
 
-`PENDING_LOCAL_SYNC`
+`BRIEF_LOCKED / READY_FOR_STORYBOARD`
 
 ## Workflow
 
 `faceless-explainer`
 
-## Known baseline
+## Canonical authority
 
-- Video ID: `seo-vs-paid-ads-clean`
-- Template: `explainer-clean`
+This repository is the canonical production source for this video.
+
+Local environments are execution targets only. They may install dependencies, preview, render and report results, but they do not define the canonical script, storyboard, timeline, registry or production rules unless those changes are committed back through the repository workflow.
+
+## Technical target
+
+- Video ID: `seo-vs-paid-ads`
+- Working template direction: `explainer-clean`
 - Orientation: vertical
+- Aspect ratio: `9:16`
 - Resolution: `1080 × 1920`
 - Frame rate: `30 fps`
-- Known rendered frame count: `1,155`
-- Known draft render filename: `seo-vs-paid-ads-clean_2026-10-05_21-00-51.mp4`
+- Target platform family: TikTok / Reels / Shorts
 
-## Current authority
-
-The working source code, assets, audio and exact timeline currently live in the local project and have not yet been synced into this repository.
-
-Do not infer or recreate missing source files from this state file.
+The earlier local draft is reference evidence only, not source authority.
 
 ## Current checkpoint
 
-Architecture V0.2 is ready. The next required action is to sync the existing local project source into this repository while preserving the known baseline render.
+Architecture V0.2 is active and the project has been routed to `faceless-explainer`.
 
-## Stop condition for this migration step
+Next production state:
 
-This migration step is complete when:
+```text
+BRIEF_LOCKED
+  ↓
+SCRIPT_LOCKED
+  ↓
+STORYBOARD_LOCKED
+  ↓
+TIMELINE_READY
+  ↓
+LOCAL_RENDER
+  ↓
+VIDEO_QA
+  ↓
+DONE
+```
 
-1. local source files are present in the repository;
-2. asset references resolve;
-3. the existing render command can run from the repo;
-4. a new render matches the baseline closely enough to begin controlled refactoring.
+## Local execution responsibility
+
+The local environment should:
+
+1. clone/pull the repository;
+2. install the documented dependencies;
+3. execute the production/render command defined by the repository;
+4. generate preview/render artifacts;
+5. report render errors or QA observations back to the repository workflow.
+
+The local environment should not silently rewrite the brief, script, storyboard or reusable blocks to make rendering easier.
+
+## Stop condition for current step
+
+This step is complete when the canonical script and storyboard are defined in the repository well enough for a local renderer implementation to be created without needing hidden chat context or legacy local files.
