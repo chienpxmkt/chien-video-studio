@@ -2,7 +2,7 @@
 
 ## Status
 
-`BRIEF_LOCKED / READY_FOR_STORYBOARD`
+`STORYBOARD_LOCKED / READY_FOR_IMPLEMENTATION`
 
 ## Workflow
 
@@ -26,11 +26,15 @@ Local environments are execution targets only. They may install dependencies, pr
 
 The earlier local draft is reference evidence only, not source authority.
 
+## Locked production artifacts
+
+- `BRIEF.md`
+- `SCRIPT.md`
+- `STORYBOARD.md`
+
 ## Current checkpoint
 
-Architecture V0.2 is active and the project has been routed to `faceless-explainer`.
-
-Next production state:
+The project is ready for implementation.
 
 ```text
 BRIEF_LOCKED
@@ -39,7 +43,9 @@ SCRIPT_LOCKED
   ↓
 STORYBOARD_LOCKED
   ↓
-TIMELINE_READY
+IMPLEMENTATION_READY  ← current
+  ↓
+LOCAL_PREVIEW
   ↓
 LOCAL_RENDER
   ↓
@@ -54,7 +60,7 @@ The local environment should:
 
 1. clone/pull the repository;
 2. install the documented dependencies;
-3. execute the production/render command defined by the repository;
+3. implement or execute the current renderer contract;
 4. generate preview/render artifacts;
 5. report render errors or QA observations back to the repository workflow.
 
@@ -62,4 +68,4 @@ The local environment should not silently rewrite the brief, script, storyboard 
 
 ## Stop condition for current step
 
-This step is complete when the canonical script and storyboard are defined in the repository well enough for a local renderer implementation to be created without needing hidden chat context or legacy local files.
+This step is complete when the repository contains the minimal implementation/config needed for a fresh local checkout to produce the first preview without hidden local source or legacy folders.
