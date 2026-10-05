@@ -15,7 +15,7 @@ Workflow
    ↓
 BRIEF
    ↓
-STORYBOARD / TIMELINE
+SCRIPT / STORYBOARD / TIMELINE
    ↓
 Registry lookup
    ↓
@@ -23,7 +23,7 @@ Composition
    ↓
 CHECK
    ↓
-PREVIEW / SNAPSHOT
+PREVIEW
    ↓
 RENDER
    ↓
@@ -36,7 +36,86 @@ Ba luật chính:
 
 1. **Route once** — khi workflow/brief đã khóa thì resume từ state hiện tại, không tự nghĩ lại toàn bộ concept.
 2. **Reuse before create** — ưu tiên block/scene/template đã có trước khi hand-build mới.
-3. **Renderer replaceable** — workflow/storyboard/timeline nằm trên renderer; renderer hiện tại có thể được thay hoặc bổ sung bằng HyperFrames/Remotion sau này mà không viết lại production logic.
+3. **Renderer replaceable** — workflow/storyboard/timeline nằm trên renderer; renderer hiện tại có thể được thay hoặc bổ sung sau này mà không viết lại production intent.
+
+## Repo-first execution model
+
+```text
+GitHub repository
+= source of truth cho production intent + implementation
+
+Local machine
+= execution environment cho check + preview + render + QA
+```
+
+Local không cần giữ một source video riêng ngoài repo. Một fresh clone phải đủ để tái tạo video nếu máy có runtime/dependency được ghi rõ.
+
+## First runnable project
+
+`videos/seo-vs-paid-ads/`
+
+- workflow: `faceless-explainer`
+- renderer: `native-html`
+- target: `1080 × 1920`, `30 fps`, `38s`
+- visual direction: `explainer-clean`
+
+### Local setup
+
+Yêu cầu:
+
+- Node.js 22+
+- FFmpeg có trên `PATH`
+
+```bash
+git clone https://github.com/chienpxmkt/chien-video-studio.git
+cd chien-video-studio
+npm install
+npm run setup:browser
+```
+
+### Check
+
+```bash
+npm run check:seo-vs-paid-ads
+```
+
+### Preview
+
+```bash
+npm run preview:seo-vs-paid-ads
+```
+
+### Render MP4
+
+```bash
+npm run render:seo-vs-paid-ads
+```
+
+Output mặc định:
+
+```text
+renders/seo-vs-paid-ads.mp4
+```
+
+`renders/` không commit vào Git mặc định.
+
+## Current renderer
+
+V0 dùng renderer native nhỏ:
+
+```text
+HTML/CSS/JS composition
+      ↓
+Playwright / Chromium
+      ↓
+deterministic frame capture
+      ↓
+FFmpeg
+      ↓
+MP4
+```
+
+Renderer này là implementation đầu tiên, không phải kiến trúc bắt buộc lâu dài. Production spec nằm phía trên renderer để sau này có thể thêm HyperFrames/Remotion adapter nếu production thật chứng minh có lợi.
 
 ## Repo boundary
 
@@ -44,7 +123,7 @@ Ba luật chính:
 
 - video routing;
 - workflow;
-- storyboard/timeline implementation;
+- script/storyboard/timeline implementation;
 - reusable video blocks/scenes/transitions;
 - media placement/treatment cho video;
 - technical/video QA;
@@ -57,7 +136,7 @@ Repo này **không** sở hữu source of truth về:
 - campaign/business strategy của client;
 - personal priorities từ `chien-life-os`.
 
-Các repo nguồn gửi sang một **production handoff nhỏ** gồm brief, approved inputs, constraints và acceptance criteria.
+Các repo nguồn gửi sang một production handoff nhỏ gồm brief, approved inputs, constraints và acceptance criteria.
 
 ## Initial workflows
 
@@ -72,18 +151,6 @@ workflows/
 
 Chỉ phát triển workflow khi có video thật cần dùng.
 
-## Shared layers
-
-```text
-shared/
-├── router/
-├── creative/
-├── storyboard/
-├── motion/
-├── media/
-└── qa/
-```
-
 ## Registry
 
 ```text
@@ -96,28 +163,15 @@ registry/
 
 Registry chỉ chứa primitive đã dùng hoặc có use case rõ. Không tạo block chỉ để repo trông đầy.
 
-## Brand frame layer
-
-Brand/project có thể có `FRAME.md` để chuyển brand/content rules sang ngữ cảnh video:
-
-```text
-brands/
-├── daisy/
-├── tabhome/
-├── an-anh/
-├── vietnam-packing/
-└── vietnam-metalwork/
-```
-
-`FRAME.md` nên ngắn và thực dụng: typography, safe area, pacing, visual density, transition grammar, do/don't. Chỉ bổ sung rule từ production thật.
-
 ## Production states
 
 ```text
 IDEA
 → BRIEF_LOCKED
-→ READY_FOR_PRODUCTION
+→ SCRIPT_LOCKED
 → STORYBOARD_LOCKED
+→ IMPLEMENTATION_READY
+→ LOCAL_PREVIEW
 → DRAFT_RENDER
 → QA
 → FINAL_RENDER
@@ -126,15 +180,12 @@ IDEA
 
 `BLOCKED` phải ghi rõ blocker và next action tối thiểu. Không tự mở thêm việc thay thế.
 
-## Current renderer
-
-Renderer hiện tại từ local `chien-video-studio` sẽ được migrate dần vào `renderer/current/` khi cần. Không rewrite engine chỉ để khớp kiến trúc mới.
-
 ## Current priority
 
-1. Dùng video `SEO vs Paid Ads` hiện có làm migration case đầu tiên.
-2. Chuẩn hóa brief/storyboard/timeline/checkpoint quanh pipeline đang chạy tốt.
-3. Tạo registry từ các scene/block thực sự đã dùng.
-4. Sau đó mới thử Daisy / product showcase / B2B video.
+1. Chạy local preview/render đầu tiên cho `SEO vs Paid Ads` từ fresh clone.
+2. Ghi lỗi/QA thật nếu có.
+3. Chỉ fix lỗi có bằng chứng.
+4. Sau render đầu tiên mới cân nhắc extract scene/block reusable.
+5. Sau đó mới qua Daisy / product showcase / B2B video.
 
-Chi tiết: `docs/ARCHITECTURE.md`.
+Chi tiết: `docs/ARCHITECTURE.md` và `docs/LOCAL-EXECUTION-CONTRACT.md`.
