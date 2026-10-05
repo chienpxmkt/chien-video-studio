@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chien-video-studio.local/schemas/storyboard.schema.json",
+  "title": "Video Storyboard",
+  "type": "object",
+  "required": ["video_id", "scenes"],
+  "properties": {
+    "video_id": {"type": "string"},
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "purpose"],
+        "properties": {
+          "id": {"type": "string"},
+          "purpose": {"type": "string"},
+          "message": {"type": ["string", "null"]},
+          "scene_type": {"type": ["string", "null"]},
+          "registry_ref": {"type": ["string", "null"]},
+          "assets": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
