@@ -1,0 +1,10 @@
+node_modules/
+.playwright/
+.cache/
+renders/
+.tmp-render/
+*.mp4
+*.mov
+*.webm
+.DS_Store
+Thumbs.db
