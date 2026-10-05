@@ -1,0 +1,11 @@
+{
+  "id": "seo-vs-paid-ads",
+  "title": "SEO vs Paid Ads",
+  "renderer": "native-html",
+  "entry": "videos/seo-vs-paid-ads/composition/index.html",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "durationSeconds": 38,
+  "output": "renders/seo-vs-paid-ads.mp4"
+}
