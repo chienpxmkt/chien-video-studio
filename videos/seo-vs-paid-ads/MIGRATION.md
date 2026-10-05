@@ -1,81 +1,84 @@
-# SEO vs Paid Ads — Migration Plan
+# SEO vs Paid Ads — Canonical Build Plan
 
 ## Goal
 
-Move the existing local `seo-vs-paid-ads-clean` project into `chien-video-studio` without changing the visible/audio baseline first.
+Build `seo-vs-paid-ads` from the repository as the canonical production source.
 
-## Migration rule
+There is no requirement to migrate or preserve the old local implementation. Any previous local render is reference material only.
 
-**Preserve before refactor.**
+## Core rule
 
-The first repository-backed render should reproduce the local draft as closely as practical. Architecture cleanup comes only after the baseline is reproducible.
+**Spec first → local execution second.**
 
-## Phase 1 — Sync local source
+The repository defines what the video is. Local defines how that checked-out version is executed on a machine.
 
-Copy the current local project source into this repository, including only files required to build/render the video.
+## Phase 1 — Canonical production spec
 
-Expected categories:
+Define in-repo:
 
-- composition/source code;
-- template implementation used by `explainer-clean`;
-- referenced images/media;
-- audio/voice/music if locally owned or redistributable;
-- config/scripts needed to preview/render.
+- brief;
+- script;
+- storyboard;
+- timing/timeline where useful;
+- brand/frame rules if applicable;
+- reusable block references;
+- media requirements;
+- acceptance criteria.
 
-Do not commit:
+No hidden local context should be required to understand or recreate the intended video.
 
-- credentials/tokens;
-- generated caches;
-- unnecessary build artifacts;
-- third-party media that cannot legally be redistributed;
-- large rendered MP4 files unless there is a clear reason.
+## Phase 2 — Minimal implementation
 
-## Phase 2 — Baseline verification
+Create only the code/assets/config required to produce the locked storyboard.
 
-After sync:
-
-1. install dependencies from the repo;
-2. run the existing render command unchanged where possible;
-3. verify `1080 × 1920`;
-4. verify `30 fps`;
-5. compare duration/frame count against the known `1,155`-frame draft;
-6. visually inspect layout, typography, transitions, timing and audio;
-7. record differences before changing architecture.
-
-## Phase 3 — Map into V0.2
-
-Only after baseline verification:
-
-- lock a minimal `BRIEF`;
-- express scene order in storyboard form;
-- map timing into timeline IR where useful;
-- identify existing reusable blocks;
-- extract `explainer-clean` only when at least one real reuse case exists;
-- keep renderer-specific code behind the renderer boundary.
-
-## Phase 4 — Controlled refactor
-
-Refactor one layer at a time:
+Preferred order:
 
 ```text
-source preserved
+brief
   ↓
-brief/storyboard state
+script
   ↓
-scene/block extraction
+storyboard
   ↓
-registry reuse
+registry lookup
   ↓
-renderer adapter boundary
+composition implementation
+  ↓
+local preview/render
 ```
 
-Every refactor must still render successfully before the next layer moves.
+Do not extract a generic engine abstraction until the real implementation shows repeated pain or reuse.
 
-## Current blockers
+## Phase 3 — Local execution
 
-- Exact local folder structure: `PENDING_LOCAL_SYNC`
-- Exact source files: `PENDING_LOCAL_SYNC`
-- Exact assets/audio inventory: `PENDING_LOCAL_SYNC`
-- Exact render command/dependencies: `PENDING_LOCAL_SYNC`
+The local environment:
 
-These blockers must be resolved from the actual local project, not reconstructed from memory.
+1. clones or pulls the repository;
+2. installs documented dependencies;
+3. runs the repository-defined preview/render command;
+4. outputs preview/MP4 artifacts;
+5. reports errors, screenshots or QA findings.
+
+Generated renders normally remain local and are not committed unless they serve a specific review/test purpose.
+
+## Phase 4 — QA and reusable extraction
+
+After the first successful render:
+
+- review timing/layout/readability/audio;
+- fix only evidenced issues;
+- identify genuinely reusable scenes/blocks;
+- promote reusable primitives into the registry only when justified by another real use case or repeated use;
+- keep renderer-specific implementation behind the renderer boundary.
+
+## Renderer policy
+
+V0.2 does not require HyperFrames or Remotion.
+
+The first implementation should choose the simplest renderer that can reliably produce the video. Future renderer adapters must consume the same production intent rather than forcing the brief/storyboard to match renderer-specific APIs.
+
+## Current checkpoint
+
+The project is no longer a migration task. It is the first canonical build used to validate the V0.2 production architecture.
+
+Next action: lock script + storyboard in this repository.
