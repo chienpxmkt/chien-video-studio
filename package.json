@@ -1,0 +1,15 @@
+{
+  "name": "chien-video-studio",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup:browser": "playwright install chromium",
+    "preview:seo-vs-paid-ads": "node renderer/native/preview.mjs seo-vs-paid-ads",
+    "render:seo-vs-paid-ads": "node renderer/native/render.mjs seo-vs-paid-ads",
+    "check:seo-vs-paid-ads": "node renderer/native/check.mjs seo-vs-paid-ads"
+  },
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}
