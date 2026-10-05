@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chien-video-studio.local/schemas/brief.schema.json",
+  "title": "Video Brief",
+  "type": "object",
+  "required": ["id", "workflow", "goal", "state", "acceptance_criteria"],
+  "properties": {
+    "id": {"type": "string"},
+    "workflow": {
+      "type": "string",
+      "enum": ["faceless-explainer", "fashion-lookbook", "product-showcase", "b2b-product-video", "general-video"]
+    },
+    "goal": {"type": "string"},
+    "state": {
+      "type": "string",
+      "enum": ["IDEA", "BRIEF_LOCKED", "READY_FOR_PRODUCTION", "STORYBOARD_LOCKED", "DRAFT_RENDER", "QA", "FINAL_RENDER", "DONE", "BLOCKED"]
+    },
+    "source_project": {"type": ["string", "null"]},
+    "brand": {"type": ["string", "null"]},
+    "target_duration_seconds": {"type": ["number", "null"], "minimum": 0},
+    "aspect_ratio": {"type": ["string", "null"]},
+    "must_keep": {"type": "array", "items": {"type": "string"}},
+    "must_avoid": {"type": "array", "items": {"type": "string"}},
+    "approved_inputs": {"type": "array", "items": {"type": "string"}},
+    "unresolved_inputs": {"type": "array", "items": {"type": "string"}},
+    "acceptance_criteria": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "stop_condition": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}
