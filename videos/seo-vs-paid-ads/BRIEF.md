@@ -2,7 +2,7 @@
 
 ## State
 
-`BASELINE_CAPTURED / CONTENT_PENDING_LOCAL_SYNC`
+`BRIEF_LOCKED / SCRIPT_PENDING`
 
 ## Deliverable
 
@@ -12,29 +12,76 @@ Short vertical faceless explainer comparing SEO and Paid Ads.
 
 `faceless-explainer`
 
-## Locked technical baseline
+## Audience
 
-- Aspect: `9:16`
+Small-business owners, marketers and operators who need to understand when SEO and Paid Ads are useful, without turning the video into a simplistic “one is better” argument.
+
+## Communication goal
+
+Explain the core trade-off clearly:
+
+- Paid Ads can buy visibility quickly but stops when spend stops.
+- SEO usually takes longer but can compound organic visibility over time.
+- The better choice depends on time horizon, cash flow, demand validation and business context.
+
+## Editorial position
+
+Do not frame SEO and Paid Ads as enemies.
+
+Preferred conclusion:
+
+> Paid Ads helps buy speed; SEO helps build compounding visibility. Strong businesses often use both at different stages or for different jobs.
+
+## Technical target
+
+- Aspect ratio: `9:16`
 - Resolution: `1080 × 1920`
 - Frame rate: `30 fps`
-- Template used in current local draft: `explainer-clean`
+- Working visual direction: `explainer-clean`
+- Platform family: TikTok / Reels / Shorts
+- Target duration: approximately `30–45 seconds`; exact duration locks with storyboard.
 
-## Content authority
+## Creative direction
 
-The exact script, scene copy, CTA, voiceover and media choices are not yet canonical in this repository.
+- clean, modern, readable;
+- information-first, not decorative motion;
+- one idea per scene;
+- large typography suitable for mobile;
+- visual contrast between immediate/paid visibility and slower/compounding organic visibility;
+- motion should clarify hierarchy or comparison, not create noise;
+- no fake dashboards or unsupported performance numbers.
 
-Until the local source is synced:
+## Must keep
 
-- do not rewrite the script;
-- do not invent scene copy;
-- do not infer CTA;
-- do not replace assets;
-- do not change timing for architectural reasons.
+- balanced comparison;
+- simple language;
+- clear distinction between speed and compounding value;
+- practical business framing;
+- conclusion that choice depends on job/context.
 
-## Acceptance criteria for migration
+## Must avoid
 
-The first repo-backed render should preserve the local draft's intended content and presentation closely enough that any later change can be reviewed as a deliberate edit rather than an accidental migration difference.
+- “SEO is free”;
+- “Paid Ads is wasteful”;
+- guaranteed rankings, ROAS or timelines;
+- invented statistics;
+- universal claims that one channel always wins;
+- overloading scenes with SEO jargon.
+
+## Production authority
+
+This repository is canonical for the video spec.
+
+Local execution must follow the committed brief/script/storyboard. If local implementation exposes a real production constraint, update the repository deliberately rather than silently changing creative intent on the machine.
+
+## Acceptance criteria
+
+The final video should let a viewer answer all three questions after one watch:
+
+1. What is the main advantage of Paid Ads?
+2. What is the main advantage of SEO?
+3. Why might a business use both instead of choosing one forever?
 
 ## Next action
 
-Sync the actual local source and assets, then replace `PENDING_LOCAL_SYNC` gaps with evidence from those files.
+Create and lock `SCRIPT.md`, then translate it into `STORYBOARD.md` before renderer implementation.
