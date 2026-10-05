@@ -2,7 +2,7 @@
 
 ## State
 
-`BRIEF_LOCKED / SCRIPT_PENDING`
+`BRIEF_LOCKED`
 
 ## Deliverable
 
@@ -39,7 +39,7 @@ Preferred conclusion:
 - Frame rate: `30 fps`
 - Working visual direction: `explainer-clean`
 - Platform family: TikTok / Reels / Shorts
-- Target duration: approximately `30–45 seconds`; exact duration locks with storyboard.
+- Target duration: `38 seconds`
 
 ## Creative direction
 
@@ -82,6 +82,13 @@ The final video should let a viewer answer all three questions after one watch:
 2. What is the main advantage of SEO?
 3. Why might a business use both instead of choosing one forever?
 
+## Current downstream state
+
+- `SCRIPT.md` — locked
+- `STORYBOARD.md` — locked
+- native renderer implementation — ready
+- local preview — pending execution evidence
+
 ## Next action
 
-Create and lock `SCRIPT.md`, then translate it into `STORYBOARD.md` before renderer implementation.
+Run the repository-defined local check/preview. Do not revise the brief unless execution or QA reveals a real content/production blocker.
