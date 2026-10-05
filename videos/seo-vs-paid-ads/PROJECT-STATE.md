@@ -2,7 +2,7 @@
 
 ## Status
 
-`STORYBOARD_LOCKED / READY_FOR_IMPLEMENTATION`
+`IMPLEMENTATION_READY / LOCAL_PREVIEW_PENDING`
 
 ## Workflow
 
@@ -18,23 +18,51 @@ Local environments are execution targets only. They may install dependencies, pr
 
 - Video ID: `seo-vs-paid-ads`
 - Working template direction: `explainer-clean`
+- Renderer: `native-html`
 - Orientation: vertical
 - Aspect ratio: `9:16`
 - Resolution: `1080 × 1920`
 - Frame rate: `30 fps`
+- Duration: `38s`
 - Target platform family: TikTok / Reels / Shorts
-
-The earlier local draft is reference evidence only, not source authority.
 
 ## Locked production artifacts
 
 - `BRIEF.md`
 - `SCRIPT.md`
 - `STORYBOARD.md`
+- `project.json`
+- `composition/index.html`
+
+## Current implementation
+
+The repository now contains the minimum runnable implementation for a fresh local checkout:
+
+```text
+package.json
+renderer/native/runtime.mjs
+renderer/native/check.mjs
+renderer/native/preview.mjs
+renderer/native/render.mjs
+videos/seo-vs-paid-ads/project.json
+videos/seo-vs-paid-ads/composition/index.html
+```
+
+Render path:
+
+```text
+composition
+  ↓
+Playwright / Chromium
+  ↓
+frame-by-frame capture
+  ↓
+FFmpeg
+  ↓
+renders/seo-vs-paid-ads.mp4
+```
 
 ## Current checkpoint
-
-The project is ready for implementation.
 
 ```text
 BRIEF_LOCKED
@@ -43,29 +71,48 @@ SCRIPT_LOCKED
   ↓
 STORYBOARD_LOCKED
   ↓
-IMPLEMENTATION_READY  ← current
+IMPLEMENTATION_READY
   ↓
-LOCAL_PREVIEW
+LOCAL_PREVIEW  ← next
   ↓
-LOCAL_RENDER
+DRAFT_RENDER
   ↓
 VIDEO_QA
   ↓
 DONE
 ```
 
-## Local execution responsibility
+## Local next action
 
-The local environment should:
+From a fresh checkout:
 
-1. clone/pull the repository;
-2. install the documented dependencies;
-3. implement or execute the current renderer contract;
-4. generate preview/render artifacts;
-5. report render errors or QA observations back to the repository workflow.
+```bash
+npm install
+npm run setup:browser
+npm run check:seo-vs-paid-ads
+npm run preview:seo-vs-paid-ads
+```
 
-The local environment should not silently rewrite the brief, script, storyboard or reusable blocks to make rendering easier.
+If preview is structurally correct, run:
+
+```bash
+npm run render:seo-vs-paid-ads
+```
+
+## What to report back
+
+Only evidence from execution:
+
+- install/runtime error;
+- preview screenshot issue;
+- clipping/overflow;
+- motion/timing issue;
+- render/FFmpeg error;
+- final MP4 metadata;
+- obvious content/readability issue.
+
+Do not silently rewrite brief/script/storyboard on the local machine.
 
 ## Stop condition for current step
 
-This step is complete when the repository contains the minimal implementation/config needed for a fresh local checkout to produce the first preview without hidden local source or legacy folders.
+This implementation step is complete when a fresh local checkout can open the first preview. The next repository change should be driven by preview/render evidence, not speculative refactoring.
