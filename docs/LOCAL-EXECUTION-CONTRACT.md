@@ -8,23 +8,24 @@ Define the boundary between the canonical GitHub repository and any local machin
 
 ```text
 GitHub repository
-= canonical production intent and implementation source
+= canonical production intent + implementation + gate ledger
 
 Local machine
 = execution environment
 ```
 
 The repository owns:
-
 - brief;
 - script;
 - storyboard;
+- asset plan;
 - timeline/spec;
 - workflows;
 - reusable registry;
 - implementation source;
 - dependency/config definitions;
-- QA rules.
+- QA rules;
+- `GATES.json`.
 
 Local owns only machine-specific execution concerns such as installed runtime, FFmpeg availability, cache and generated render output.
 
@@ -35,15 +36,21 @@ git pull
   ↓
 install dependencies
   ↓
-validate/check
+validate gate manifest
+  ↓
+check
   ↓
 preview
   ↓
+report G5 evidence
+  ↓
 render
   ↓
-QA observations
+technical QA / probe
   ↓
-commit deliberate fixes back to repo if needed
+report G6 evidence
+  ↓
+human final review
 ```
 
 ## Local may
@@ -52,7 +59,9 @@ commit deliberate fixes back to repo if needed
 - run preview/render/check commands;
 - create local caches;
 - create generated MP4/screenshots;
+- run FFprobe/technical validators;
 - report runtime/render errors;
+- report evidence for G5/G6;
 - propose fixes.
 
 ## Local must not silently
@@ -62,18 +71,34 @@ commit deliberate fixes back to repo if needed
 - change claims/facts;
 - change reusable block behavior;
 - change timing only to hide an implementation bug;
-- introduce machine-only source that cannot be reproduced from the repo.
+- introduce machine-only source that cannot be reproduced from the repo;
+- mark `G7_HUMAN_FINAL` as passed.
+
+## Evidence returned from local
+
+Useful local evidence includes:
+- command + result;
+- preview screenshot/reference;
+- observed overflow/clipping;
+- render path;
+- FFprobe metadata;
+- duration delta;
+- missing asset error;
+- QA observation.
+
+Do not use “ran successfully” as a substitute for the actual check result when a measurable output exists.
 
 ## Generated artifacts
 
-Rendered MP4 files should normally remain outside Git history.
+Rendered MP4 files normally remain outside Git history.
 
-Commit a render/screenshot only when it is deliberately used as:
-
+Commit a render/screenshot only when deliberately used as:
 - a visual regression fixture;
 - a review reference;
 - a documented release artifact.
 
+Otherwise reference it as local evidence.
+
 ## Reproducibility rule
 
-A fresh machine with the documented runtime and dependencies should be able to reproduce the intended video from the repository without hidden chat context or legacy local folders.
+A fresh machine with the documented runtime and dependencies must be able to reproduce the intended video from the repository without hidden chat context or legacy local folders.
