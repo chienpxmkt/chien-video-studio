@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chien-video-studio.local/schemas/gates.schema.json",
+  "title": "Video Production Gates",
+  "type": "object",
+  "required": ["version", "video_id", "current_gate", "gates"],
+  "properties": {
+    "version": { "type": "string" },
+    "video_id": { "type": "string", "minLength": 1 },
+    "current_gate": { "type": "string", "minLength": 1 },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "required", "status", "evidence"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^G[0-9]+_[A-Z0-9_]+$" },
+          "name": { "type": "string", "minLength": 1 },
+          "required": { "type": "boolean" },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "PASS", "FAIL", "BLOCKED", "N_A"]
+          },
+          "evidence": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "checks": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "note": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gate", "blocker", "affected_scope", "next_action"],
+        "properties": {
+          "gate": { "type": "string" },
+          "blocker": { "type": "string" },
+          "affected_scope": { "type": "string" },
+          "owner": { "type": ["string", "null"] },
+          "next_action": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
