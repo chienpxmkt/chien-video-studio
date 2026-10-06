@@ -1,94 +1,169 @@
-# Chiến Video Studio Architecture v0.2
+# Chiến Video Studio Architecture v0.3
 
 ## 1. Purpose
 
-Xây một production system đủ chuẩn để AI có thể nhận brief, dựng script/storyboard/timeline, tái sử dụng block, render và QA video mà không phụ thuộc chặt vào một renderer duy nhất.
+Build a lean production system where AI can turn approved inputs into a reproducible video, while keeping creative authority, evidence and renderer execution clearly separated.
 
-Hệ thống ưu tiên **production thật trước framework**.
+The system prioritizes **real production before framework growth**.
 
-## 2. Architecture
+## 2. Architecture planes
 
 ```text
-Project / Brand repo
-      ↓
-Production Handoff
-      ↓
-Video Router
-      ↓
-Workflow owner
-      ↓
-Brief / Script / Storyboard
-      ↓
-Registry blocks/scenes/templates
-      ↓
-Renderer adapter
-      ↓
-Local Check / Preview / Render
-      ↓
-Technical QA
-      ↓
-Project-specific QA
+SOURCE PROJECT / APPROVED INPUTS
+            ↓
+┌──────────────────────────────────────┐
+│ CONTROL PLANE — GitHub               │
+│ Router · lifecycle · gates · evidence│
+│ blockers · approvals                 │
+└──────────────────────────────────────┘
+            ↓
+┌──────────────────────────────────────┐
+│ PRODUCTION PLANE — GitHub            │
+│ Brief · Script · Storyboard · Assets │
+│ Timeline · Registry · Composition    │
+└──────────────────────────────────────┘
+            ↓
+┌──────────────────────────────────────┐
+│ EXECUTION PLANE — Local              │
+│ Check · Preview · Render · Probe     │
+│ Technical QA evidence                │
+└──────────────────────────────────────┘
+            ↓
+       HUMAN FINAL GATE
+            ↓
+           DONE
+            ↓
+┌──────────────────────────────────────┐
+│ FEEDBACK PLANE — optional            │
+│ Publish analytics → useful learnings │
+└──────────────────────────────────────┘
 ```
 
-## 3. Source-of-truth model
+## 3. Why gates are separate from state
+
+Lifecycle state answers:
+
+> Where is the production?
+
+Gate status answers:
+
+> What evidence allows it to advance?
+
+Creative judgment answers:
+
+> Is this actually good enough to publish?
+
+These are intentionally separate.
+
+A successful render can pass technical checks and still fail final human review.
+
+## 4. Source-of-truth model
 
 ```text
 GitHub repository
-= canonical production intent + implementation
+= canonical production intent + implementation + gate ledger
 
 Local machine
 = execution environment
 ```
 
-Local may install dependencies, preview, render and report QA evidence. Local must not silently become an alternate production source.
+Local may install dependencies, preview, render, probe and return evidence. Local must not silently become an alternate source.
 
-## 4. Router
+## 5. Router
 
-Router chỉ trả lời:
+Router answers only:
 
-> Deliverable này thuộc workflow nào?
-
-Router không viết video và không mở rộng scope.
+> Which workflow owns this deliverable?
 
 Initial routes:
-
-- explain arbitrary topic/text → `faceless-explainer`;
+- explain topic/text → `faceless-explainer`;
 - Daisy fashion/affiliate/lookbook → `fashion-lookbook`;
-- website/product/company showcase → `product-showcase`;
+- product/company showcase → `product-showcase`;
 - export/B2B product explainer → `b2b-product-video`;
-- không khớp rõ → `general-video`.
+- unclear fit → `general-video`.
 
 ### Route once
 
-Khi workflow và brief đã được khóa:
+Once workflow and brief are locked:
+- layout/motion edits do not route again;
+- QA fixes do not reopen concept unless a blocker proves they must;
+- a specific edit changes only the requested scope;
+- a genuinely new deliverable routes again.
 
-- edit layout/motion không route lại;
-- QA fix không viết lại concept trừ khi blocker bắt buộc;
-- specific edit chỉ sửa đúng phần yêu cầu;
-- task mới mới được route lại.
+## 6. Production Gates
 
-## 5. Workflow owns the deliverable
+Canonical gate order:
 
-Workflow sở hữu luồng end-to-end, ví dụ:
+```text
+G0_ROUTE
+G1_BRIEF_EVIDENCE
+G2_SCRIPT
+G3_STORYBOARD_ASSETS
+G4_IMPLEMENTATION
+G5_LOCAL_PREVIEW
+G6_RENDER_QA
+G7_HUMAN_FINAL
+G8_LEARN (optional)
+```
+
+Detailed criteria live in `docs/PRODUCTION-GATES.md`.
+
+### Gate rule
+
+A required gate advances only with:
+- `PASS`; or
+- justified `N_A`.
+
+`PASS` requires evidence.
+
+`BLOCKED` requires blocker + affected scope + owner/source + minimum next action.
+
+## 7. Lifecycle state
+
+Canonical state:
+
+```text
+IDEA
+→ BRIEF_LOCKED
+→ SCRIPT_LOCKED
+→ STORYBOARD_LOCKED
+→ IMPLEMENTATION_READY
+→ LOCAL_PREVIEW
+→ DRAFT_RENDER
+→ QA
+→ FINAL_RENDER
+→ DONE
+```
+
+`BLOCKED` is an interrupt state with explicit recovery information.
+
+State stays simple for humans. `GATES.json` carries structured gate evidence.
+
+## 8. Workflow owns the deliverable
+
+Workflow owns the end-to-end production path.
+
+Example:
 
 ```text
 faceless-explainer
 brief
 → script
-→ storyboard
-→ scene selection
-→ composition
-→ local preview/render
-→ QA
+→ storyboard/assets
+→ timeline/composition
+→ preview
+→ render
+→ technical QA
+→ human final
 ```
 
-Shared capability không sở hữu deliverable.
+A shared capability never owns the deliverable.
 
-## 6. Intermediate representation
+## 9. Intermediate representation
 
-Workflow không nên gắn chặt trực tiếp vào implementation của renderer.
+Workflow must not be tightly coupled to renderer implementation.
 
-Tối thiểu:
+Minimum layering:
 
 ```text
 Brief
@@ -97,16 +172,16 @@ Script
   ↓
 Storyboard
   ↓
-Project config / Timeline IR when useful
+Timeline / project config when useful
   ↓
 Renderer adapter
 ```
 
-IR chỉ được mở rộng khi renderer hiện tại cần field mới hoặc production thực tế chứng minh cần thiết.
+Only add IR fields when production actually needs them.
 
-## 7. Renderer boundary
+## 10. Renderer boundary
 
-V0 renderer:
+Current native renderer:
 
 ```text
 renderer/native/
@@ -116,7 +191,7 @@ renderer/native/
   render.mjs
 ```
 
-Current path:
+Path:
 
 ```text
 HTML/CSS/JS composition
@@ -130,28 +205,35 @@ FFmpeg
 MP4
 ```
 
-Không migrate sang HyperFrames/Remotion chỉ vì kiến trúc đẹp hơn.
+Renderer remains replaceable.
 
-Chỉ cân nhắc adapter mới khi có lợi ích thực:
+Do not migrate to HyperFrames/Remotion only because the abstraction looks cleaner. Consider another adapter only when it materially improves capability, cost, speed, batch production or reuse.
 
-- workflow hiện tại không làm được;
-- giảm đáng kể chi phí/tốc độ;
-- hỗ trợ batch/automation tốt hơn;
-- cần ecosystem/block/runtime đặc thù.
+## 11. Deterministic production
 
-## 8. Deterministic production
-
-Ưu tiên:
-
-- timing explicit;
-- asset path/version explicit;
-- random-free behavior khi render;
+Prefer:
+- explicit timing;
+- explicit asset path/version;
+- no render-time randomness;
 - finite animations;
-- render cùng input → output frame logic nhất quán;
-- frame state điều khiển bằng explicit time thay vì wall-clock;
-- FFprobe/render metadata được lưu khi cần QA.
+- frame state driven by explicit time, not wall-clock;
+- same input → consistent frame logic;
+- probe/render metadata captured when needed for QA.
 
-## 9. Registry
+## 12. Asset and source boundary
+
+G3 must make missing media visible before implementation.
+
+When relevant, track:
+- source/provenance;
+- usage constraints;
+- approved voice/media;
+- required graphics;
+- unresolved asset dependencies.
+
+Do not invent missing source material merely to make the pipeline continue.
+
+## 13. Registry
 
 ```text
 registry/
@@ -168,19 +250,16 @@ Need
 → search registry
 → reuse if fit
 → adapt if small delta
-→ create new only when necessary
+→ create only when necessary
 ```
 
-Chỉ promote component từ composition sang registry sau khi reuse thật hoặc repeated pain chứng minh cần.
+Promote a component only after reuse or repeated production pain proves value.
 
-## 10. FRAME.md
+## 14. FRAME.md
 
-`FRAME.md` là lớp dịch từ brand/content direction sang camera/frame/video rules.
+`FRAME.md` translates brand/content direction into video rules without replacing the source project's canonical brand system.
 
-Không thay `BRAND.md` hoặc source-of-truth.
-
-Có thể chứa:
-
+It may contain:
 - aspect ratio defaults;
 - typography scale;
 - caption/title style;
@@ -192,75 +271,90 @@ Có thể chứa:
 - media treatment;
 - CTA visual rules.
 
-## 11. State model
+## 15. QA split
 
-```text
-IDEA
-→ BRIEF_LOCKED
-→ SCRIPT_LOCKED
-→ STORYBOARD_LOCKED
-→ IMPLEMENTATION_READY
-→ LOCAL_PREVIEW
-→ DRAFT_RENDER
-→ QA
-→ FINAL_RENDER
-→ DONE
-```
+### Automated/repo checks
 
-`BLOCKED` phải ghi:
+Can verify:
+- gate manifest integrity;
+- repository evidence exists;
+- project config is present;
+- deterministic entry points are present.
 
-- blocker;
-- affected scope;
-- owner/source cần phản hồi;
-- next action tối thiểu.
+### Local technical QA
 
-## 12. QA split
-
-### Technical/video QA
-Repo này sở hữu:
-
+Can verify:
+- runtime/dependency execution;
 - resolution/aspect ratio;
 - fps/duration;
 - visual overflow/safe area;
 - text clipping;
-- asset missing;
-- audio sync/levels cơ bản khi audio tồn tại;
-- timing/gap/overlap;
+- missing media;
+- timing gaps/overlaps;
+- basic audio sync/levels;
 - render integrity.
 
-### Project-specific QA
-Repo nguồn sở hữu:
+### Human final QA
 
-- đúng fact/claim;
-- đúng character;
-- đúng business message;
-- đúng experiment hypothesis;
-- publication/brand approval.
+Must judge:
+- hook strength;
+- pacing/boring sections;
+- semantic fit of visuals;
+- awkwardness;
+- misleading presentation;
+- acceptance criteria;
+- publish readiness.
 
-## 13. First canonical case
+Technical automation must not auto-pass this layer.
 
-`SEO vs Paid Ads` là case đầu tiên để validate architecture.
+### Source-project QA
 
-Mục tiêu:
+Still owns:
+- factual truth;
+- claim approval;
+- character canon;
+- business message;
+- experiment hypothesis;
+- publication/brand authority.
 
-1. Brief/script/storyboard sống trong repo.
-2. Composition implementation sống trong repo.
-3. Fresh local checkout có lệnh check/preview/render rõ ràng.
-4. Local chỉ trả evidence/error về repo.
-5. Chỉ sau render thật mới extract reusable block/scene.
+## 16. Feedback loop
 
-## 14. Anti-overengineering rules
+`G8_LEARN` is optional and does not block `DONE`.
 
-Không làm khi chưa có use case thật:
+Only capture post-publish metrics that can change future production decisions. Avoid building a large analytics system before enough real videos exist.
 
+## 17. First canonical case
+
+`SEO vs Paid Ads` validates v0.3.
+
+Current expected progression:
+
+```text
+G0 PASS
+G1 PASS
+G2 PASS
+G3 PASS
+G4 PASS
+G5 PENDING  ← fresh local preview next
+G6 PENDING
+G7 PENDING
+G8 PENDING / optional
+```
+
+No local preview/render evidence should be fabricated in the repo.
+
+## 18. Anti-overengineering rules
+
+Do not build without a real use case:
 - full NLE editor;
 - cloud render farm;
-- multi-renderer abstraction hoàn chỉnh;
-- 20+ workflows;
-- block catalog lớn;
+- complete multi-renderer abstraction;
+- dozens of workflows;
+- large speculative block catalogs;
 - autonomous self-improvement;
-- plugin packaging cho nhiều agent platform.
+- analytics warehouse;
+- agent-platform plugin packaging.
 
-Một abstraction mới phải trả lời được:
+Any new abstraction must answer:
 
-> Nó giảm pain/lỗi/thời gian nào trong video thật?
+> Which real production error, delay or repeated pain does this remove?

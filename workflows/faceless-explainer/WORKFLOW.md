@@ -1,22 +1,36 @@
-# Faceless Explainer Workflow v0.1
+# Faceless Explainer Workflow v0.2
 
 ## Purpose
 
-Biến một topic/script/notes thành video giải thích không cần talking head, dùng typography, diagram, comparison, chart hoặc media hỗ trợ.
+Turn a topic/script/notes into a faceless explainer using typography, diagrams, comparison, charts or supporting media.
 
 First reference case: **SEO vs Paid Ads — `explainer-clean`**.
 
 ## Inputs
 
-Tối thiểu:
-
+Minimum:
 - goal;
-- key message / script hoặc source notes;
+- key message / script / source notes;
 - target duration;
 - aspect ratio;
-- brand/frame context nếu có;
+- brand/frame context if relevant;
 - must keep / must avoid;
 - acceptance criteria.
+
+## Gate-aware flow
+
+```text
+G0 Route & intake
+→ G1 Brief/evidence
+→ G2 Script lock
+→ G3 Storyboard/assets
+→ G4 Implementation ready
+→ G5 Local preview
+→ G6 Render/technical QA
+→ G7 Human final
+→ DONE
+→ G8 Learn (optional)
+```
 
 ## State entry
 
@@ -28,88 +42,118 @@ IDEA → BRIEF_LOCKED
 
 ### Existing production
 
-Nếu video đã có draft/render, reverse-map state tối thiểu sang brief/storyboard/timeline rồi tiếp tục từ state hiện tại. Không rebuild video chỉ để chuẩn hóa structure.
+If a video already has a draft/render, reverse-map only enough state/evidence to resume safely.
 
-## Steps
+Do not rebuild a working video merely to make the folder structure cleaner.
 
-### 1. Lock message beats
+## 1. Lock message beats
 
-Chia nội dung theo các beat cần hiểu, không theo số scene cố định.
+Split content by what the viewer must understand, not by an arbitrary scene count.
 
-Output:
+Possible beats:
+- hook;
+- context/problem;
+- core explanation;
+- comparison/proof;
+- takeaway/CTA.
 
-```text
-hook
-context/problem
-core explanation
-comparison/proof
-takeaway/CTA
-```
+Use only what is needed.
 
-Chỉ dùng những beat thực sự cần.
+Gate target: `G2_SCRIPT`.
 
-### 2. Build storyboard
+## 2. Build storyboard + asset plan
 
-Mỗi scene phải có purpose rõ.
+Every scene must have a clear purpose.
 
-Ưu tiên scene type có sẵn trong registry. Nếu chưa có registry entry, dùng local composition hiện tại và chỉ promote thành registry sau khi chứng minh reusable.
+For every required media element, make its status visible:
+- repo asset;
+- approved external input;
+- local/generated execution artifact;
+- missing/blocker.
 
-### 3. Lock timeline
+Prefer registry primitives when they genuinely fit. Do not promote one-off composition into registry prematurely.
 
-Ghi start/duration rõ để render có thể tái tạo.
+Gate target: `G3_STORYBOARD_ASSETS`.
 
-Không micro-optimize timing trước khi preview chứng minh cần.
+## 3. Lock timeline / implementation
 
-### 4. Compose
+Record explicit timing when the renderer needs it.
 
-Ưu tiên:
+Do not micro-optimize timing before preview evidence proves the need.
 
-```text
-existing template
-→ existing scene/block
-→ small adaptation
-→ new implementation
-```
+Implementation must expose:
+- renderer;
+- entry;
+- width/height;
+- fps;
+- duration;
+- output path.
 
-### 5. Preview + QA
+Gate target: `G4_IMPLEMENTATION`.
 
-Check:
+## 4. Local check + preview
 
-- thông điệp đọc/hiểu kịp;
-- hierarchy rõ;
-- không overflow/safe-area issue;
-- timing không có khoảng chết bất thường;
-- motion không tranh sự chú ý với nội dung;
-- render metadata đúng target.
+Run repository-defined commands.
 
-### 6. Fix minimally
+Inspect:
+- message readability;
+- hierarchy;
+- overflow/safe area;
+- missing media;
+- obvious timing dead zones;
+- motion competing with content.
 
-Sửa blocker/QA issue nhỏ nhất trước.
+Local reports evidence. It does not silently rewrite locked production intent.
 
-Không rewrite script/visual system nếu chỉ có một lỗi layout hoặc timing.
+Gate target: `G5_LOCAL_PREVIEW`.
 
-### 7. Final render
+## 5. Draft render + technical QA
 
-Khi acceptance criteria pass → `DONE`.
+Render the real artifact and verify:
+- metadata;
+- duration;
+- frame integrity;
+- timing;
+- basic audio sync/levels when applicable;
+- missing media/clipping.
 
-## Shared capabilities
+Gate target: `G6_RENDER_QA`.
 
-- storyboard;
-- creative/frame direction;
-- motion;
-- media;
-- technical QA.
+## 6. Human final review
 
-## Output
+Watch the full video at 1×.
 
-- brief/state;
-- storyboard;
-- timeline/composition data;
-- rendered MP4;
-- QA note nếu cần.
+Judge:
+- hook;
+- pacing;
+- boring sections;
+- whether visuals actually support the message;
+- awkward/misleading presentation;
+- acceptance criteria;
+- publish readiness.
+
+Technical validators cannot pass this gate.
+
+Gate target: `G7_HUMAN_FINAL`.
+
+## 7. Fix minimally
+
+Fix the smallest evidenced issue first.
+
+Do not rewrite the whole script/visual system because one layout or timing bug exists.
+
+## 8. Finish
+
+When all required gates and acceptance criteria pass → `DONE`.
+
+## 9. Learn only when useful
+
+If the video is published and meaningful analytics exist, record only learnings that should change future production.
+
+`G8_LEARN` is optional and does not block `DONE`.
 
 ## Stop condition
 
-Video đạt acceptance criteria của brief và render integrity pass.
+The video meets acceptance criteria and all required gates pass.
 
-Không tự tạo thêm template/block/workflow sau khi video done. Reusable pattern được promote riêng sau review.
+Do not auto-create another template/block/workflow after completion.
