@@ -13,7 +13,19 @@
     "goal": {"type": "string"},
     "state": {
       "type": "string",
-      "enum": ["IDEA", "BRIEF_LOCKED", "READY_FOR_PRODUCTION", "STORYBOARD_LOCKED", "DRAFT_RENDER", "QA", "FINAL_RENDER", "DONE", "BLOCKED"]
+      "enum": [
+        "IDEA",
+        "BRIEF_LOCKED",
+        "SCRIPT_LOCKED",
+        "STORYBOARD_LOCKED",
+        "IMPLEMENTATION_READY",
+        "LOCAL_PREVIEW",
+        "DRAFT_RENDER",
+        "QA",
+        "FINAL_RENDER",
+        "DONE",
+        "BLOCKED"
+      ]
     },
     "source_project": {"type": ["string", "null"]},
     "brand": {"type": ["string", "null"]},
