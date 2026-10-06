@@ -1,0 +1,131 @@
+{
+  "version": "0.3",
+  "video_id": "seo-vs-paid-ads",
+  "current_gate": "G5_LOCAL_PREVIEW",
+  "gates": [
+    {
+      "id": "G0_ROUTE",
+      "name": "Route & intake",
+      "required": true,
+      "status": "PASS",
+      "evidence": [
+        "repo:videos/seo-vs-paid-ads/BRIEF.md",
+        "repo:workflows/faceless-explainer/WORKFLOW.md"
+      ],
+      "checks": [
+        "workflow selected",
+        "goal and target format recorded",
+        "acceptance criteria recorded"
+      ]
+    },
+    {
+      "id": "G1_BRIEF_EVIDENCE",
+      "name": "Brief & evidence",
+      "required": true,
+      "status": "PASS",
+      "evidence": [
+        "repo:videos/seo-vs-paid-ads/BRIEF.md"
+      ],
+      "checks": [
+        "production intent locked",
+        "constraints recorded",
+        "no hidden local source required"
+      ]
+    },
+    {
+      "id": "G2_SCRIPT",
+      "name": "Script lock",
+      "required": true,
+      "status": "PASS",
+      "evidence": [
+        "repo:videos/seo-vs-paid-ads/SCRIPT.md"
+      ],
+      "checks": [
+        "script is canonical in repo",
+        "message beats are locked for implementation"
+      ]
+    },
+    {
+      "id": "G3_STORYBOARD_ASSETS",
+      "name": "Storyboard & asset plan",
+      "required": true,
+      "status": "PASS",
+      "evidence": [
+        "repo:videos/seo-vs-paid-ads/STORYBOARD.md"
+      ],
+      "checks": [
+        "scene purposes defined",
+        "visual direction defined",
+        "required production elements mapped"
+      ]
+    },
+    {
+      "id": "G4_IMPLEMENTATION",
+      "name": "Timeline & implementation ready",
+      "required": true,
+      "status": "PASS",
+      "evidence": [
+        "repo:videos/seo-vs-paid-ads/project.json",
+        "repo:videos/seo-vs-paid-ads/composition/index.html",
+        "repo:renderer/native/runtime.mjs",
+        "repo:renderer/native/check.mjs",
+        "repo:renderer/native/preview.mjs",
+        "repo:renderer/native/render.mjs"
+      ],
+      "checks": [
+        "renderer entry explicit",
+        "width height fps duration explicit",
+        "fresh checkout has repository-defined execution path"
+      ]
+    },
+    {
+      "id": "G5_LOCAL_PREVIEW",
+      "name": "Check & preview",
+      "required": true,
+      "status": "PENDING",
+      "evidence": [],
+      "checks": [
+        "npm install succeeds",
+        "browser runtime installed",
+        "check command passes",
+        "preview inspected for overflow timing and readability"
+      ]
+    },
+    {
+      "id": "G6_RENDER_QA",
+      "name": "Draft render & technical QA",
+      "required": true,
+      "status": "PENDING",
+      "evidence": [],
+      "checks": [
+        "MP4 render completes",
+        "metadata matches target",
+        "technical QA passes"
+      ]
+    },
+    {
+      "id": "G7_HUMAN_FINAL",
+      "name": "Human final review",
+      "required": true,
+      "status": "PENDING",
+      "evidence": [],
+      "checks": [
+        "full video watched at 1x",
+        "creative quality accepted",
+        "acceptance criteria satisfied"
+      ],
+      "note": "Must not be auto-passed by a technical validator."
+    },
+    {
+      "id": "G8_LEARN",
+      "name": "Post-publish learning",
+      "required": false,
+      "status": "PENDING",
+      "evidence": [],
+      "checks": [
+        "capture only analytics that materially change future production decisions"
+      ]
+    }
+  ],
+  "blockers": []
+}
