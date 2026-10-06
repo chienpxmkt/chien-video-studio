@@ -21,14 +21,15 @@ Before changing a production task, read in order:
 - Do not reopen strategy/brief decisions during a technical edit unless a blocker proves the brief must change.
 - Reuse existing blocks/scenes/templates before creating new ones.
 - Keep workflow/storyboard/timeline logic independent from renderer-specific implementation where practical.
-- Preserve the current renderer unless a real production pain justifies replacement.
+- Keep renderer replaceable; do not migrate renderer merely for architectural neatness.
 - Keep project-specific facts, claims, character canon and publication authority in the source project repo.
 - Do not invent missing facts/assets. Mark the affected scope blocked.
 - Make the smallest coherent change required by the task.
+- Local machines execute repository-defined work; they do not become an alternate source of truth.
 
 ## Production lifecycle
 
-`IDEA → BRIEF_LOCKED → READY_FOR_PRODUCTION → STORYBOARD_LOCKED → DRAFT_RENDER → QA → FINAL_RENDER → DONE`
+`IDEA → BRIEF_LOCKED → SCRIPT_LOCKED → STORYBOARD_LOCKED → IMPLEMENTATION_READY → LOCAL_PREVIEW → DRAFT_RENDER → QA → FINAL_RENDER → DONE`
 
 `BLOCKED` must record blocker, affected scope and minimum next action.
 
@@ -59,6 +60,10 @@ Do not automatically:
 - automate a manual step that has not repeated enough to justify it;
 - expand registry for hypothetical future use.
 
-## First reference case
+## First canonical case
 
-Use the existing local `SEO vs Paid Ads` / `explainer-clean` video as the first migration/reference case. Preserve its working output while wrapping it with brief → storyboard/timeline → registry → QA conventions.
+`SEO vs Paid Ads` is the first repo-first reference case.
+
+The repository owns its brief, script, storyboard, composition and execution commands. Local machines only run check/preview/render and report evidence back.
+
+Do not attempt to preserve or migrate an older hidden local implementation. Previous local renders are reference evidence only.

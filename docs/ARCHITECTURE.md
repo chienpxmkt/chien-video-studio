@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-Xây một production system đủ chuẩn để AI có thể nhận brief, dựng storyboard/timeline, tái sử dụng block, render và QA video mà không phụ thuộc chặt vào một renderer duy nhất.
+Xây một production system đủ chuẩn để AI có thể nhận brief, dựng script/storyboard/timeline, tái sử dụng block, render và QA video mà không phụ thuộc chặt vào một renderer duy nhất.
 
 Hệ thống ưu tiên **production thật trước framework**.
 
@@ -17,22 +17,32 @@ Video Router
       ↓
 Workflow owner
       ↓
-Shared capabilities
-      ↓
-Storyboard / Timeline IR
+Brief / Script / Storyboard
       ↓
 Registry blocks/scenes/templates
       ↓
 Renderer adapter
       ↓
-Preview / Render
+Local Check / Preview / Render
       ↓
 Technical QA
       ↓
 Project-specific QA
 ```
 
-## 3. Router
+## 3. Source-of-truth model
+
+```text
+GitHub repository
+= canonical production intent + implementation
+
+Local machine
+= execution environment
+```
+
+Local may install dependencies, preview, render and report QA evidence. Local must not silently become an alternate production source.
+
+## 4. Router
 
 Router chỉ trả lời:
 
@@ -57,73 +67,67 @@ Khi workflow và brief đã được khóa:
 - specific edit chỉ sửa đúng phần yêu cầu;
 - task mới mới được route lại.
 
-## 4. Workflow owns the deliverable
+## 5. Workflow owns the deliverable
 
 Workflow sở hữu luồng end-to-end, ví dụ:
 
 ```text
 faceless-explainer
 brief
-→ message beats
+→ script
 → storyboard
 → scene selection
-→ timeline
 → composition
-→ render
+→ local preview/render
 → QA
 ```
 
 Shared capability không sở hữu deliverable.
 
-## 5. Shared capabilities
-
-- `router` — chọn workflow/state handling;
-- `creative` — visual direction, pacing, frame rules;
-- `storyboard` — scene decomposition + beat mapping;
-- `motion` — animation grammar, transitions;
-- `media` — asset selection/placement/treatment;
-- `qa` — deterministic technical checklist.
-
-Các capability này có thể được dùng lại giữa nhiều workflow.
-
 ## 6. Intermediate representation
 
 Workflow không nên gắn chặt trực tiếp vào implementation của renderer.
 
-Tối thiểu nên có:
+Tối thiểu:
 
 ```text
 Brief
   ↓
+Script
+  ↓
 Storyboard
   ↓
-Timeline / Composition IR
+Project config / Timeline IR when useful
   ↓
 Renderer adapter
-```
-
-Ví dụ timeline scene:
-
-```json
-{
-  "id": "scene-03",
-  "type": "comparison",
-  "start": 7.5,
-  "duration": 4.0,
-  "layout": "split-comparison",
-  "motion": "rise-in",
-  "assets": []
-}
 ```
 
 IR chỉ được mở rộng khi renderer hiện tại cần field mới hoặc production thực tế chứng minh cần thiết.
 
 ## 7. Renderer boundary
 
+V0 renderer:
+
 ```text
-renderer/
-├── current/
-└── adapters/   # later, only if needed
+renderer/native/
+  runtime.mjs
+  check.mjs
+  preview.mjs
+  render.mjs
+```
+
+Current path:
+
+```text
+HTML/CSS/JS composition
+      ↓
+Playwright / Chromium
+      ↓
+frame-by-frame capture
+      ↓
+FFmpeg
+      ↓
+MP4
 ```
 
 Không migrate sang HyperFrames/Remotion chỉ vì kiến trúc đẹp hơn.
@@ -137,18 +141,15 @@ Chỉ cân nhắc adapter mới khi có lợi ích thực:
 
 ## 8. Deterministic production
 
-Video automation nên tránh state không tái tạo được.
-
 Ưu tiên:
 
 - timing explicit;
 - asset path/version explicit;
-- seeded/random-free behavior khi render;
+- random-free behavior khi render;
 - finite animations;
 - render cùng input → output frame logic nhất quán;
+- frame state điều khiển bằng explicit time thay vì wall-clock;
 - FFprobe/render metadata được lưu khi cần QA.
-
-Không cần ép engine hiện tại thành HyperFrames runtime; chỉ áp dụng nguyên lý deterministic phù hợp.
 
 ## 9. Registry
 
@@ -160,18 +161,6 @@ registry/
 └── templates/
 ```
 
-### Block
-Primitive nhỏ: title, stat, quote, chart, CTA, product callout.
-
-### Scene
-Composition pattern: comparison, timeline, problem/solution, product reveal.
-
-### Transition
-Motion giữa scene.
-
-### Template
-Workflow-level starting composition, ví dụ `explainer-clean`.
-
 Rule:
 
 ```text
@@ -181,6 +170,8 @@ Need
 → adapt if small delta
 → create new only when necessary
 ```
+
+Chỉ promote component từ composition sang registry sau khi reuse thật hoặc repeated pain chứng minh cần.
 
 ## 10. FRAME.md
 
@@ -201,15 +192,15 @@ Có thể chứa:
 - media treatment;
 - CTA visual rules.
 
-Chỉ thêm rule đã được dùng/duyệt qua production.
-
 ## 11. State model
 
 ```text
 IDEA
 → BRIEF_LOCKED
-→ READY_FOR_PRODUCTION
+→ SCRIPT_LOCKED
 → STORYBOARD_LOCKED
+→ IMPLEMENTATION_READY
+→ LOCAL_PREVIEW
 → DRAFT_RENDER
 → QA
 → FINAL_RENDER
@@ -223,8 +214,6 @@ IDEA
 - owner/source cần phản hồi;
 - next action tối thiểu.
 
-Không tạo việc thay thế để lấp thời gian.
-
 ## 12. QA split
 
 ### Technical/video QA
@@ -235,7 +224,7 @@ Repo này sở hữu:
 - visual overflow/safe area;
 - text clipping;
 - asset missing;
-- audio sync/levels cơ bản;
+- audio sync/levels cơ bản khi audio tồn tại;
 - timing/gap/overlap;
 - render integrity.
 
@@ -248,18 +237,17 @@ Repo nguồn sở hữu:
 - đúng experiment hypothesis;
 - publication/brand approval.
 
-## 13. First migration case
+## 13. First canonical case
 
-Video `SEO vs Paid Ads` + template `explainer-clean` là case đầu tiên.
+`SEO vs Paid Ads` là case đầu tiên để validate architecture.
 
-Mục tiêu migration:
+Mục tiêu:
 
-1. Không thay đổi visual chỉ để refactor.
-2. Ghi lại brief hiện có.
-3. Trích storyboard/timeline từ output đang chạy.
-4. Xác định block/scene thực sự reusable.
-5. Thêm QA/checkpoint quanh pipeline.
-6. Chỉ sau đó mới refactor engine nếu có pain thật.
+1. Brief/script/storyboard sống trong repo.
+2. Composition implementation sống trong repo.
+3. Fresh local checkout có lệnh check/preview/render rõ ràng.
+4. Local chỉ trả evidence/error về repo.
+5. Chỉ sau render thật mới extract reusable block/scene.
 
 ## 14. Anti-overengineering rules
 

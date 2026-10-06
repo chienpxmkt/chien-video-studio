@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SEO vs Paid Ads</title>
+<style>
+  *{box-sizing:border-box} html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f4ef;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#151515}
+  #stage{width:1080px;height:1920px;position:relative;overflow:hidden;background:linear-gradient(180deg,#faf9f5 0%,#f0eee7 100%)}
+  .topline{position:absolute;left:72px;top:72px;font-size:28px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.52}
+  .scene{position:absolute;inset:0;padding:170px 72px 220px;display:flex;flex-direction:column;justify-content:center}
+  .eyebrow{font-size:34px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;opacity:.55;margin-bottom:22px}
+  h1{font-size:102px;line-height:.96;letter-spacing:-.055em;margin:0;max-width:930px} h2{font-size:72px;line-height:1.02;letter-spacing:-.045em;margin:0}
+  .sub{font-size:38px;line-height:1.28;margin-top:28px;max-width:900px;opacity:.72}
+  .caption{position:absolute;left:72px;right:72px;bottom:120px;font-size:34px;line-height:1.3;font-weight:650;padding:26px 30px;border-radius:28px;background:rgba(255,255,255,.76);backdrop-filter:blur(10px);box-shadow:0 18px 60px rgba(0,0,0,.08)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:54px}.card{background:#fff;border:2px solid rgba(0,0,0,.08);border-radius:38px;padding:42px;min-height:420px;box-shadow:0 30px 80px rgba(0,0,0,.07)}
+  .label{font-size:32px;font-weight:850;letter-spacing:.04em;text-transform:uppercase}.metric{font-size:66px;font-weight:900;line-height:1;margin-top:26px}.muted{opacity:.58}
+  .arrow{height:12px;border-radius:999px;background:#151515;position:relative;margin-top:48px}.arrow:after{content:"";position:absolute;right:-2px;top:-12px;border-left:26px solid #151515;border-top:18px solid transparent;border-bottom:18px solid transparent}
+  .curve{height:180px;margin-top:44px;position:relative}.curve svg{width:100%;height:100%}.curve path{fill:none;stroke:#151515;stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+  .steps{display:grid;gap:22px;margin-top:52px}.step{display:grid;grid-template-columns:82px 1fr;align-items:center;gap:20px;background:#fff;padding:28px 30px;border-radius:28px;border:2px solid rgba(0,0,0,.07);font-size:38px;font-weight:760}.num{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:#151515;color:#fff;font-size:28px}
+  .switch{width:310px;height:150px;border-radius:100px;background:#151515;padding:16px;display:flex;align-items:center;margin:44px 0}.knob{width:118px;height:118px;border-radius:50%;background:#fff}
+  .barWrap{height:330px;display:flex;align-items:flex-end;gap:28px;margin-top:38px}.bar{flex:1;background:#151515;border-radius:28px 28px 10px 10px;min-height:18px}
+  .stack{display:grid;gap:22px;margin-top:48px}.stackItem{padding:34px 38px;background:#fff;border-radius:30px;border:2px solid rgba(0,0,0,.07);font-size:44px;font-weight:820}
+  .bigQuestion{font-size:118px;font-weight:920;letter-spacing:-.06em}.strike{position:relative;display:inline-block}.strike:after{content:"";position:absolute;left:-12px;right:-12px;top:52%;height:10px;background:#151515;transform:rotate(-4deg);border-radius:999px}
+  .pill{display:inline-flex;padding:18px 28px;border-radius:999px;background:#151515;color:#fff;font-size:30px;font-weight:800;margin-top:24px}
+  .summary{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px}.summary .card{min-height:310px}.summary ul{font-size:34px;line-height:1.55;padding-left:28px;margin:24px 0 0}
+  .final{font-size:58px;line-height:1.05;font-weight:900;margin-top:36px;max-width:900px}
+  .progress{position:absolute;left:72px;right:72px;bottom:64px;height:7px;border-radius:999px;background:rgba(0,0,0,.1);overflow:hidden}.progress>div{height:100%;background:#151515;transform-origin:left center}
+</style>
+</head>
+<body>
+<div id="stage"><div class="topline">Chiến Video Studio · Explainer</div><div id="scene"></div><div class="progress"><div id="progress"></div></div></div>
+<script>
+const scenes=[
+ {start:0,end:4.5,render:p=>`<div class="scene"><div class="eyebrow">SEO vs Paid Ads</div><h1>Speed now.<br>Visibility that compounds.</h1><div class="grid2"><div class="card" style="transform:translateY(${(1-p)*70}px);opacity:${p}"><div class="label">Paid Ads</div><div class="metric">SPEED</div><div class="arrow"></div></div><div class="card" style="transform:translateY(${(1-Math.max(0,(p-.18)/.82))*70}px);opacity:${Math.max(0,(p-.18)/.82)}"><div class="label">SEO</div><div class="metric">COMPOUNDING</div><div class="curve"><svg viewBox="0 0 400 180"><path d="M20 150 C110 148,120 120,180 110 S260 65,380 18"/></svg></div></div></div><div class="caption">Muốn có khách nhanh hơn thì chạy Ads. Muốn xây traffic bền hơn thì làm SEO. Nhưng chọn một trong hai mãi mãi thì chưa chắc đúng.</div></div>`},
+ {start:4.5,end:10.5,render:p=>`<div class="scene"><div class="eyebrow">Paid Ads</div><h2>Mua tốc độ để test nhu cầu nhanh hơn.</h2><div class="steps">${['Campaign ON','Spend','Visibility / demand signal'].map((x,i)=>{const q=Math.max(0,Math.min(1,(p-i*.18)/.45));return `<div class="step" style="transform:translateX(${(1-q)*80}px);opacity:${q}"><div class="num">${i+1}</div>${x}</div>`}).join('')}</div><div class="caption">Paid Ads cho bạn tốc độ. Bật chiến dịch, trả tiền để mua lượt hiển thị và test nhu cầu nhanh hơn.</div></div>`},
+ {start:10.5,end:14.5,render:p=>`<div class="scene"><div class="eyebrow">Dependency on spend</div><h2>Ngân sách dừng.<br>Paid traffic thường giảm theo.</h2><div class="switch"><div class="knob" style="transform:translateX(${p<.45?160:0}px);transition:none"></div></div><div class="barWrap">${[.95,.82,.7,.5,.28,.1].map((h,i)=>`<div class="bar" style="height:${Math.max(18,330*h*(1-p*.85*(i/5)))}px;opacity:${1-i*.06}"></div>`).join('')}</div><div class="caption">Nhưng khi dừng ngân sách, phần lớn traffic trả phí cũng dừng theo.</div></div>`},
+ {start:14.5,end:21.5,render:p=>`<div class="scene"><div class="eyebrow">SEO</div><h2>Chậm hơn vì phải xây nền trước.</h2><div class="stack">${['Content','Website','Trust'].map((x,i)=>{const q=Math.max(0,Math.min(1,(p-i*.18)/.45));return `<div class="stackItem" style="transform:translateY(${(1-q)*45}px);opacity:${q}">${x}</div>`}).join('')}</div><div class="pill">Takes time</div><div class="caption">SEO chậm hơn. Bạn phải đầu tư vào nội dung, website và độ tin cậy trước khi thấy kết quả rõ.</div></div>`},
+ {start:21.5,end:27.5,render:p=>`<div class="scene"><div class="eyebrow">Compounding visibility</div><h2>Một trang tốt có thể tiếp tục được tìm thấy theo thời gian.</h2><div class="curve" style="height:360px"><svg viewBox="0 0 900 360"><path d="M30 320 C180 315,220 285,330 250 S520 190,610 130 S760 68,870 24" style="stroke-dasharray:1100;stroke-dashoffset:${1100*(1-p)}"/></svg></div><div class="pill">CAN keep earning organic visibility</div><div class="caption">Đổi lại, những trang làm tốt có thể tiếp tục mang về lượt tìm kiếm tự nhiên theo thời gian.</div></div>`},
+ {start:27.5,end:31.5,render:p=>`<div class="scene"><div class="eyebrow">Reframe the question</div><div class="bigQuestion"><span class="strike" style="opacity:${Math.min(1,p*2)}">SEO vs Ads?</span></div><div class="final" style="transform:translateY(${(1-Math.max(0,(p-.35)/.65))*55}px);opacity:${Math.max(0,(p-.35)/.65)}">Which job?<br>Which stage?</div><div class="caption">Vì vậy câu hỏi không phải là “SEO hay Ads cái nào tốt hơn?”</div></div>`},
+ {start:31.5,end:38,render:p=>`<div class="scene"><div class="eyebrow">Use both deliberately</div><h2>Mỗi kênh làm một việc khác nhau.</h2><div class="summary"><div class="card"><div class="label">Paid Ads</div><ul><li>Speed</li><li>Testing</li><li>Immediate visibility</li></ul></div><div class="card"><div class="label">SEO</div><ul><li>Compounding visibility</li><li>Long-term discovery</li><li>Traffic asset</li></ul></div></div><div class="final">Use each channel for the job it does best.</div><div class="caption">Ads giúp mua tốc độ. SEO giúp xây tài sản traffic. Doanh nghiệp tốt thường dùng mỗi kênh cho đúng việc và đúng thời điểm.</div></div>`}
+];
+const sceneEl=document.getElementById('scene'), progressEl=document.getElementById('progress');
+function clamp(v){return Math.max(0,Math.min(1,v))}
+window.__setTime=(t)=>{const s=scenes.find(x=>t>=x.start&&t<x.end)||scenes[scenes.length-1];const p=clamp((t-s.start)/(s.end-s.start));sceneEl.innerHTML=s.render(p);progressEl.style.transform=`scaleX(${clamp(t/38)})`;document.body.dataset.time=t.toFixed(3)};
+window.__setTime(0); window.__VIDEO_READY__=true;
+if(new URLSearchParams(location.search).has('preview')){const started=performance.now();function tick(now){window.__setTime(((now-started)/1000)%38);requestAnimationFrame(tick)}requestAnimationFrame(tick)}
+</script>
+</body>
+</html>
